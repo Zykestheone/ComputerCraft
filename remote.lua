@@ -10,4 +10,13 @@ while true do
     if action == "forward"
         then rednet.broadcast(forward)
     end
+    if action == "back"
+        then rednet.broadcast(back)
+    end
+    if action == "left"
+        then rednet.broadcast(left)
+    end
+    if action == "right"
+        then rednet.broadcast(right)
+    end
 end
