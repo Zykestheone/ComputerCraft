@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            const ws = new WebSocket("ws://localhost:8081")
+            function moveTurtleForward(){
+                ws.send("return turtle.forward()")
+            }
+            function moveTurtleBack(){
+                ws.send("return turtle.back()")
+            }
+            function moveTurtleUp(){
+                ws.send("return turtle.up()")
+            }
+            function moveTurtleDown(){
+                ws.send("return turtle.down()")
+            }
+            function turnTurtleLeft(){
+                ws.send("return turtle.turnLeft()")
+            }
+            function turnTurtleRight(){
+                ws.send("return turtle.turnRight()")
+            }
+            function randombutton(){
+                ws.send("return gps.locate()")
+            }
+            ws.addEventListener("message",msg=>{
+                console.log(msg.data)
+            })
+        </script>
+    </head>
+    <body>
+        <button style="font-size: 50px;"  onclick="moveTurtleForward()">Forward</button>
+        <button style="font-size: 50px;" onclick="moveTurtleBack()">Back</button>
+        <button style="font-size: 50px;" onclick="moveTurtleUp()">Up</button>
+        <button style="font-size: 50px;" onclick="moveTurtleDown()">Down</button>
+        <p></p>
+        <button style="font-size: 50px;" onclick="turnTurtleLeft()">Turn Left</button>
+        <button style="font-size: 50px;" onclick="turnTurtleRight()">Turn Right</button>
+        <p></p>
+        <button style="font-size: 30px;" onclick="randombutton()">Button</button>
+    </body>
+</html>
