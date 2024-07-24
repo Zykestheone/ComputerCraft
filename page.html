@@ -25,7 +25,7 @@
                 ws.send("return gps.locate()")
             }
             ws.addEventListener("message",msg=>{
-                console.log(msg.data)
+                console.log(msg)
             })
         </script>
     </head>
@@ -34,7 +34,7 @@
         <button style="font-size: 50px;" onclick="moveTurtleBack()">Back</button>
         <button style="font-size: 50px;" onclick="moveTurtleUp()">Up</button>
         <button style="font-size: 50px;" onclick="moveTurtleDown()">Down</button>
-        <p></p>
+        <p id="log"></p>
         <button style="font-size: 50px;" onclick="turnTurtleLeft()">Turn Left</button>
         <button style="font-size: 50px;" onclick="turnTurtleRight()">Turn Right</button>
         <p></p>

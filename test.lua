@@ -1,6 +1,7 @@
-ws = http.websocket("ws://localhost:5656")
-local x,y,z = gps.locate()
-local fuel = turtle.getFuelLevel()
+local ws = http.websocket("ws://localhost:5656")
 
-ws.send("XYZ: "..x.." / "..y.." / "..z)
-ws.send("Fuel: "..fuel)
+local data = ws.receive()
+
+local cmd = textutils.serialise(data)
+print(cmd)
+

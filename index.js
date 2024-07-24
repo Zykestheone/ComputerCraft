@@ -1,16 +1,23 @@
-const WebS = require("ws")
-const wss = new WebS.Server({port:5656})
+const socket = require("ws");
+var clients = [];
+const webSocket = new socket.Server({port:5656});
 
-wss.on("connection",ws=>{
-    console.log("connection!")
-    ws.on("message",msg=>{
-        wss.broadcast(JSON.stringify({func:msg.toString()}))
-        console.log("Received Message: "+msg.toString())
+webSocket.on("connection", wsClient => {
+
+    console.log("Something Connected")
+    clients.push(wsClient);
+
+    wsClient.on("message", messageData => {
+
+        console.log("Received Message: "+messageData.toString());
+
+        clients.forEach(function(client){
+            client.send(messageData.toString());
+        });
+
     })
-});
 
-wss.broadcast = function broadcast(msg){
-    wss.clients.forEach(function each(client) {
-        client.send(msg)
-    });
-};
+    wsClient.on("close",() => {
+        console.log("Something Disconnected");
+    })
+})
