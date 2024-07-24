@@ -2,9 +2,9 @@
 <html>
     <head>
         <script>
-            const ws = new WebSocket("ws://localhost:8081")
+            const ws = new WebSocket("ws://localhost:5656")
             function moveTurtleForward(){
-                ws.send("return turtle.forward()")
+                ws.send("turtle.forward()")
             }
             function moveTurtleBack(){
                 ws.send("return turtle.back()")
