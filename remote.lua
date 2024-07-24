@@ -7,16 +7,16 @@ local right = "turtle.turnRight()"
 while true do
     io.write("")
     action = io.read()
-    if action == "forward"
+    if action == "w"
         then rednet.broadcast(forward)
     end
-    if action == "back"
+    if action == "s"
         then rednet.broadcast(back)
     end
-    if action == "left"
+    if action == "a"
         then rednet.broadcast(left)
     end
-    if action == "right"
+    if action == "d"
         then rednet.broadcast(right)
     end
 end
