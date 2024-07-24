@@ -3,6 +3,7 @@ local forward = "turtle.forward()"
 local back = "turtle.back()"
 local left = "turtle.turnLeft()"
 local right = "turtle.turnRight()"
+local fuel = "turtle.getFuelLevel()"
 
 while true do
     io.write("")
@@ -18,5 +19,10 @@ while true do
     end
     if action == "d"
         then rednet.broadcast(right)
+    end
+    if action == "fuel"
+        then rednet.broadcast(fuel)
+        id, msg = rednet.receive()
+        print("Fuel level is "..msg)
     end
 end
