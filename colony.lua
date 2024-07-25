@@ -8,6 +8,7 @@ while true do
     termclear()
     print(colony.getColonyName().." Stats")
     print("--------------------------")
+    print("")
     print("Building Sites: ".. colony.amountOfConstructionSites())
     print("Citizens: ".. colony.amountOfCitizens())
     local underAttack = "No"
