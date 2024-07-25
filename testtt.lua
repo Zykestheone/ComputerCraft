@@ -1,4 +1,5 @@
 -- Call the function to get the list of current requests
+    local colony = peripheral.wrap("back")
     local requests = colony.getRequests()
 
     -- Check if requests were retrieved successfully
