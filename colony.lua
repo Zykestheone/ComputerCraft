@@ -1,7 +1,13 @@
 local colony = peripheral.wrap("back")
-while true do
+function termclear()
     term.clear()
     term.setCursorPos(1,1)
+end
+
+while true do
+    termclear()
+    print(colony.getColonyName().." Stats")
+    print("---------------------------")
     print("Building Sites: ".. colony.amountOfConstructionSites())
     print("Citizens: ".. colony.amountOfCitizens())
     local underAttack = "No"
