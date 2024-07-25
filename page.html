@@ -4,7 +4,7 @@
         <script>
             const ws = new WebSocket("ws://localhost:5656")
             function moveTurtleForward(){
-                ws.send("turtle.forward()")
+                ws.send("return turtle.forward()")
             }
             function moveTurtleBack(){
                 ws.send("return turtle.back()")
@@ -22,10 +22,10 @@
                 ws.send("return turtle.turnRight()")
             }
             function randombutton(){
-                ws.send("return gps.locate()")
+                ws.send("getfuel")
             }
             ws.addEventListener("message",msg=>{
-                console.log(msg)
+                console.log(msg.data)
             })
         </script>
     </head>

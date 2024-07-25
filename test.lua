@@ -5,7 +5,6 @@ if ws then
         if data ~= "getfuel" then
             local cmd = assert(loadstring(data))
             cmd()
-        end
         elseif data == "getfuel" then
             local flevel =turtle.getFuelLevel()
             ws.send(flevel)
