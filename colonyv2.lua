@@ -45,13 +45,18 @@ updateDisplay()
 
 -- Main loop
 while true do
-    -- Wait for a key event or a timeout of 60 seconds
-    local event, key = os.pullEventTimeout("key", 60)
+    -- Start a timer for 60 seconds
+    local timerId = os.startTimer(60)
 
-    -- If a key was pressed or timeout occurred, update the display
-    if event == "key" then
+    -- Wait for events and handle them
+    local eventData = {os.pullEvent()}
+    local event = eventData[1]
+
+    if event == "timer" and eventData[2] == timerId then
+        -- Timer event occurred, update the display
         updateDisplay()
-    elseif event == "timer" then
+    elseif event == "key" then
+        -- Key event occurred, update the display
         updateDisplay()
     end
 end
