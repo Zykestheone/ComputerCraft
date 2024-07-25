@@ -1,6 +1,7 @@
 local colony = peripheral.wrap("back")
 while true do
     term.clear()
+    term.setCursorPos(1,1)
     print("Building Sites: ".. colony.amountOfConstructionSites())
     print("Citizens: ".. colony.amountOfCitizens())
     local underAttack = "No"
