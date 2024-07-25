@@ -52,7 +52,7 @@ while true do
     local eventData = {os.pullEvent()}
     local event = eventData[1]
 
-    if event == "timer" and eventData[2] == timerId then
+    if event == "timer" then
         -- Timer event occurred, update the display
         updateDisplay()
     elseif event == "key" then
