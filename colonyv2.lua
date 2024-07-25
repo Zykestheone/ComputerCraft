@@ -46,7 +46,7 @@ updateDisplay()
 -- Main loop
 while true do
     -- Start a timer for 60 seconds
-    local timerId = os.startTimer(60)
+    local timerId = os.startTimer(5)
 
     -- Wait for events and handle them
     local eventData = {os.pullEvent()}
