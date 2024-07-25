@@ -46,7 +46,7 @@ updateDisplay()
 -- Main loop
 while true do
     -- Start a timer for 60 seconds
-    local timerId = os.startTimer(5)
+    local timerId = os.startTimer(60)
 
     -- Wait for events and handle them
     local eventData = {os.pullEvent()}
@@ -58,5 +58,8 @@ while true do
     elseif event == "key" then
         -- Key event occurred, update the display
         updateDisplay()
+        
+        -- Reset the timer after key press
+        timerId = os.startTimer(60)
     end
 end
