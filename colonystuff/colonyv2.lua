@@ -29,9 +29,9 @@ function citizens()
             local citizenSaturation = citizen.saturation
             local citizenBetterFood = citizen.betterFood
             if citizenSaturation <= 6 then
-                print(citizenName .. "needs food")
+                print(citizenName .. " needs food")
             elseif citizenSaturation <= 6 and citizenBetterFood == true then
-                print(citizenName .. "needs better food")
+                print(citizenName .. " needs better food")
             end
         end
     else
