@@ -21,14 +21,33 @@ function requests()
             print("Request: " .. itemName .. " requested by " .. requesterName)
         end
     else
-        print("No requests found.")
+        return
+    end
+end
+
+function citizens()
+    local citizens = colony.getCitizens()
+
+    if citizens and #citizens > 0 then
+        for i, citizen in ipairs(citizens) do
+            local citizenName = citizen.name
+            local citizenSaturation = citizen.saturation
+            local citizenBetterFood = citizen.betterFood
+            if citizenSaturation <= 6 then
+                print(citizenName .. "needs food")
+            elseif citizenSaturation <= 6 and citizenBetterFood == true then
+                print(citizenName .. "needs better food")
+            end
+        end
+    else
+        return
     end
 end
 
 function updateDisplay()
     termclear()
     print(colony.getColonyName() .. " Stats")
-    print("--------------------------")
+    term.write("--------------------------------------------------------------------------------")
     print("")
     print("Construction Sites: " .. colony.amountOfConstructionSites())
     print("Citizens: " .. colony.amountOfCitizens() .. "/" .. colony.maxOfCitizens())
@@ -38,6 +57,7 @@ function updateDisplay()
 
     -- Call the requests function to print request information
     requests()
+    citizens()
 end
 
 -- Initial display update
