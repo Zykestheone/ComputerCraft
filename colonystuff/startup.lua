@@ -1,0 +1,1 @@
+shell.run("wget","run","https://raw.githubusercontent.com/Zykestheone/ComputerCraft/main/colonystuff/colonyv2.lua")
