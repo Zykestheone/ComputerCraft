@@ -56,14 +56,19 @@ end
 updateDisplay()
 
 while true do
-    local timerId = os.startTimer(60)
-    local eventData = {os.pullEvent()}
-    local event = eventData[1]
-
-    if event == "timer" then
-        updateDisplay()
-    elseif event == "key" then
-        updateDisplay()
-        timerId = os.startTimer(60)
-    end
+    if colony then
+        local timerId = os.startTimer(60)
+        local eventData = {os.pullEvent()}
+        local event = eventData[1]
+    
+        if event == "timer" then
+            updateDisplay()
+        elseif event == "key" then
+            updateDisplay()
+            timerId = os.startTimer(60)
+        end
+    else
+        print("You are not inside a colony")
+    end 
 end
+
