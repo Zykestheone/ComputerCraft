@@ -1,5 +1,10 @@
 local colony = peripheral.wrap("back")
-
+if colony then
+    return
+else
+    print("No Colony Found")
+    exit()
+end
 function termclear()
     term.clear()
     term.setCursorPos(1, 1)
@@ -66,7 +71,6 @@ end
 updateDisplay()
 
 while true do
-    if colony then
         local timerId = os.startTimer(60)
         local eventData = {os.pullEvent()}
         local event = eventData[1]
@@ -76,9 +80,6 @@ while true do
         elseif event == "key" then
             updateDisplay()
             timerId = os.startTimer(60)
-        end
-    else
-        print("You are not inside a colony")
-    end 
+        end 
 end
 
