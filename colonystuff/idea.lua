@@ -25,7 +25,7 @@ function checkME(item)
     end
 end
 
-function exportItem()
+function exportItem(item)
     local direction = "back"
     local exportedCount, err = mebridge.exportItem({name = item.name, count = item.count}, direction)
     if exportedCount and exportedCount > 0 then
