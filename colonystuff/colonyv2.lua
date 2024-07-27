@@ -1,10 +1,5 @@
 local colony = peripheral.wrap("back")
-if colony then
-    updateDisplay()
-else
-    print("No Colony Found")
-    exit()
-end
+
 function termclear()
     term.clear()
     term.setCursorPos(1, 1)
@@ -67,6 +62,8 @@ function updateDisplay()
     requests()
     citizens()
 end
+
+updateDisplay()
 
 while true do
         local timerId = os.startTimer(60)
