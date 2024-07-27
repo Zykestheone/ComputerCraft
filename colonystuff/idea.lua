@@ -17,7 +17,7 @@ end
 
 function checkME(item)
     local itemDetails, err = mebridge.getItem({name = item.name})
-    if itemDetails and itemDetails.amount and itemDetails.amount > 0 then
+    if itemDetails and itemDetails.amount and itemDetails.amount >= item.count then
         print("Item is Avaiable")
     else
         print("Item not Available")
