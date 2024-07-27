@@ -66,7 +66,7 @@ end
 updateDisplay()
 
 while true do
-        local timerId = os.startTimer(60)
+        local timerId = os.startTimer(20)
         local eventData = {os.pullEvent()}
         local event = eventData[1]
     
@@ -74,7 +74,7 @@ while true do
             updateDisplay()
         elseif event == "key" then
             updateDisplay()
-            timerId = os.startTimer(60)
+            timerId = os.startTimer(20)
         end 
 end
 
