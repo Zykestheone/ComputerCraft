@@ -16,11 +16,11 @@ function request()
 end
 
 function checkME(item)
-    local itemDetails = mebridge.getItem({name = item.name})
-    if itemDetails then
-        print("Item Available")
+    local itemDetails, err = mebridge.getItem({name = item.name})
+    if itemDetails and itemDetails.amount and itemDetails.amount > 0 then
+        print("Item is Avaiable")
     else
-        print("Item not Avaiable")
+        print("Item not Available")
     end
 end
 
