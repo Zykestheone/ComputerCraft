@@ -39,6 +39,16 @@ function citizens()
     end
 end
 
+function research()
+    local research = colony.getResearch()
+
+    if research and #research > 0 then
+        for i, x in ipairs(research) do
+        
+        end
+    end
+end
+
 function updateDisplay()
     termclear()
     print(colony.getColonyName() .. " Stats")
