@@ -10,6 +10,16 @@ function workOrders()
         print("Job ID is " .. id)
         print("Job Type is " .. type)
     end
+
+    return jobids
 end
 
-workOrders()
+function checkJobID(jobids)
+    print("Please Enter Job ID: ")
+    local inputID = tonumber(read())
+    print(inputID)
+end
+
+
+local jobids = workOrders()
+checkJobID(jobids)
