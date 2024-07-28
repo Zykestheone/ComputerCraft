@@ -34,7 +34,7 @@ function checkJobID(jobids)
     print("Invalid ID")
 end
 
-function getResourcesForJob(jobID)
+function getResources(jobID)
     local resources = colony.getWorkOrderResources(jobID)
     
     if resources then

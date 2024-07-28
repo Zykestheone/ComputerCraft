@@ -14,6 +14,7 @@ function requests()
             local requesterName = request.target
 
             print("Request: " .. itemName .. " requested by " .. requesterName)
+            print("")
         end
     else
         return
