@@ -61,7 +61,6 @@ function updateDisplay()
     print("Amount of graves: " .. colony.amountOfGraves())
     print("")
     requests()
-    citizens()
 end
 
 updateDisplay()
