@@ -74,6 +74,7 @@ while true do
             updateDisplay()
         elseif event == "key" then
             updateDisplay()
+            os.cancelTimer()
             timerId = os.startTimer(20)
         end 
 end
