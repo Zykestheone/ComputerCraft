@@ -90,6 +90,7 @@ function deploy(startCoords, quarySize, endCoords, options)
 
     --Place and turn on turtle
     turtle.place()
+    os.sleep(1)
     peripheral.call("front", "turnOn")
     
     
