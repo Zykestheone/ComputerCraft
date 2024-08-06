@@ -16,7 +16,7 @@ else
 end
 
 
-local modem = peripheral.wrap("left")
+local modem = peripheral.wrap("right")
 modem.open(SERVER_PORT)
 
 local target = vector.new()
@@ -78,16 +78,12 @@ function deployFuelChest()
         print("SERVER NEEDS FUEL...")
         exit(1)
     end
-    turtle.select(getItemIndex("enderstorage:ender_storage"))
-    turtle.up()
-    turtle.place()
-    turtle.down()
 end
 
 
 function deploy(startCoords, quarySize, endCoords, options)
     --Place turtle from inventory
-    turtle.select(getItemIndex("computercraft:turtle_expanded"))
+    turtle.select(getItemIndex("computercraft:turtle_advanced"))
     while(turtle.detect()) do
         os.sleep(0.3)
     end
@@ -111,10 +107,6 @@ function deploy(startCoords, quarySize, endCoords, options)
             print("SERVER NEEDS FUEL...")
             exit(1)
         end
-        turtle.select(getItemIndex("enderstorage:ender_storage"))
-        turtle.up()
-        turtle.place()
-        turtle.down()
     end
     
     deployFuelChest()
@@ -201,5 +193,19 @@ while (true) do
     -- All bots deployed, wait for last bot finished signal
     event, side, senderChannel, replyChannel, msg, distance = os.pullEvent("modem_message")
     turtle.digUp()
+	turtle.turnRight()
+	turtle.forward(1)
+	turtle.turnLeft()
+	turtle.select(getItemIndex("enderstorage:ender_storage"))
+	endercount = (turtle.getItemCount() - 2)
+	if (endercount ~= 0) then
+		print(string.format("Depositing %d Ender Chests.", endercount))
+		turtle.drop(endercount)
+	end
+	
+	turtle.turnLeft()
+	turtle.forward(1)
+	turtle.turnRight()
+	
 
 end
