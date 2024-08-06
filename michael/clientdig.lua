@@ -272,7 +272,7 @@ function getEnderIndex()
     for slot = 1, SLOT_COUNT, 1 do
         local item = turtle.getItemDetail(slot)
         if(item ~= nil) then
-            if(item["name"] == "enderstorage:ender_storage") then
+            if(item["name"] == "enderstorage:ender_chest") then
                 return slot
             end
         end

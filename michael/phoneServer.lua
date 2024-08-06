@@ -196,7 +196,7 @@ while (true) do
 	turtle.turnRight()
 	turtle.forward(1)
 	turtle.turnLeft()
-	turtle.select(getItemIndex("enderstorage:ender_storage"))
+	turtle.select(getItemIndex("enderstorage:ender_chest"))
 	endercount = (turtle.getItemCount() - 2)
 	if (endercount ~= 0) then
 		print(string.format("Depositing %d Ender Chests.", endercount))
