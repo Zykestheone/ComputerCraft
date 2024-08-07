@@ -1,5 +1,9 @@
 --PHONE  SERVER--
 
+--[[ SEGMENTATION is how much will be dug per bot, for example
+A Segmentation of 5, if you dig a 10x10, it will split this for 4 bots.
+Make sure your dig size is divisible by the segmentation size
+]]--
 local SERVER_PORT = 420
 local CLIENT_PORT = 0
 local SLOT_COUNT = 16
@@ -7,12 +11,18 @@ local SLOT_COUNT = 16
 
 local segmentation = 5
 if (#arg == 1) then
-    segmentation = tonumber(arg[1])
+    local temp_segmentation = tonumber(arg[1])
+    if temp_segmentation then
+        segmentation = temp_segmentation
+    else
+        print("Invalid Argument, must be a number")
+        shell.exit()
+    end
 elseif (#arg == 0) then
     print(string.format("No segmentation size selected, defaulting to %d", segmentation))
 else
     print('Too many args given...')
-    exit(1)
+    shell.exit(1)
 end
 
 
@@ -169,7 +179,7 @@ while (true) do
     withStorage = withStorage == "1" and true or false
     data = parseParams(msg)
     options = {}
-    options["withStorage"] = True
+    options["withStorage"] = true
 
     target = data[1]
     size = data[2]
