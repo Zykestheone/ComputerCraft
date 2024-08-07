@@ -1,11 +1,11 @@
 local colony = peripheral.wrap("back")
 
-function termclear()
+local function TermClear()
     term.clear()
     term.setCursorPos(1, 1)
 end
 
-function requests()
+local function Requests()
     local requests = colony.getRequests()
 
     if requests and #requests > 0 then
@@ -21,7 +21,7 @@ function requests()
     end
 end
 
-function citizens()
+local function Citizens()
     local citizens = colony.getCitizens()
 
     if citizens and #citizens > 0 then
@@ -40,7 +40,7 @@ function citizens()
     end
 end
 
-function research()
+local function Research()
     local research = colony.getResearch()
 
     if research and #research > 0 then
@@ -50,8 +50,8 @@ function research()
     end
 end
 
-function updateDisplay()
-    termclear()
+local function UpdateDisplay()
+    TermClear()
     print(colony.getColonyName() .. " Stats")
     term.write("--------------------------------------------------------------------------------")
     print("")
@@ -60,10 +60,10 @@ function updateDisplay()
     print("Overall happiness: " .. math.floor(colony.getHappiness()))
     print("Amount of graves: " .. colony.amountOfGraves())
     print("")
-    requests()
+    Requests()
 end
 
-updateDisplay()
+UpdateDisplay()
 
 while true do
         local timerId = os.startTimer(20)
@@ -71,9 +71,9 @@ while true do
         local event = eventData[1]
     
         if event == "timer" then
-            updateDisplay()
+            UpdateDisplay()
         elseif event == "key" then
-            updateDisplay()
+            UpdateDisplay()
             os.cancelTimer()
             timerId = os.startTimer(20)
         end 

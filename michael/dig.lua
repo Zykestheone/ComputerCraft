@@ -3,7 +3,7 @@
 local SERVER_PORT = 420
 local PHONE_PORT = 69
 
-modem = peripheral.wrap("back")
+local modem = peripheral.wrap("back")
 local size = vector.new()
 
 if (#arg == 3) then

@@ -1,11 +1,11 @@
 local colony = peripheral.wrap("back")
 
-function termclear()
+local function TermClear()
     term.clear()
     term.setCursorPos(1, 1)
 end
 
-function requests()
+local function Requests()
     -- Fetch the list of current requests
     local requests = colony.getRequests()
 
@@ -26,7 +26,7 @@ function requests()
 end
 
 while true do
-    termclear()
+    TermClear()
     print(colony.getColonyName() .. " Stats")
     print("--------------------------")
     print("")
@@ -37,7 +37,7 @@ while true do
     print("")
 
     -- Call the requests function to print request information
-    requests()
+    Requests()
 
     os.sleep(60)
 end

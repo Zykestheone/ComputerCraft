@@ -1,12 +1,12 @@
 local me = peripheral.find("meBridge")
 local colony = peripheral.find("colonyIntegrator")
 
-function termclear()
+local function TermClear()
     term.clear()
     term.setCursorPos(1,1)
 end
 
-function workOrders()
+local function workOrders()
     local jobids = colony.getWorkOrders()
     
     for i, jobid in ipairs(jobids) do
@@ -19,22 +19,22 @@ function workOrders()
     return jobids
 end
 
-function checkJobID(jobids)
+local function checkJobID(jobids)
     print("Please Enter Job ID:")
     local inputID = tonumber(read())
 
     for i, jobid in ipairs(jobids) do
         if jobid.id == inputID then
             print("Getting Resources")
-            termclear()
-            getResources(inputID)
+            TermClear()
+            GetResources(inputID)
             return
         end
     end
     print("Invalid ID")
 end
 
-function getResources(jobID)
+function GetResources(jobID)
     local resources = colony.getWorkOrderResources(jobID)
     
     if resources then
