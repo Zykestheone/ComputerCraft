@@ -1,4 +1,4 @@
---CLIENT DIG--
+-- CLIENT DIG --
 
 local SLOT_COUNT = 16
 
@@ -8,7 +8,7 @@ local SERVER_PORT = 420
 local modem = peripheral.wrap("right")
 modem.open(CLIENT_PORT)
 
-local function split (inputstr, sep)
+local function split(inputstr, sep)
     if sep == nil then
         sep = "%s"
     end
@@ -22,30 +22,13 @@ end
 local function parseParams(data)
     local coords = {}
     local params = split(data, " ")
-    
+
     coords[1] = vector.new(params[1], params[2], params[3])
     coords[2] = vector.new(params[4], params[5], params[6])
     coords[3] = vector.new(params[7], params[8], params[9])
     coords[4] = tonumber(params[10]) -- Fuel needed
 
     return coords
-end
-
-local function gatherFuel(fuelNeeded)
-    local fuelGathered = 0
-    local stackSize = 64 -- Adjust if using a different fuel type with a different stack size
-
-    while fuelGathered < fuelNeeded do
-        local amountToSuck = math.min(stackSize, fuelNeeded - fuelGathered)
-        local success = turtle.suckDown(amountToSuck)
-        if not success then
-            print("Failed to gather sufficient fuel.")
-            return false
-        end
-        fuelGathered = fuelGathered + amountToSuck
-        os.sleep(1) -- Sleep for a bit to avoid potential issues with rapid successive calls
-    end
-    return true
 end
 
 local function checkFuel(fuelNeeded)
@@ -69,6 +52,22 @@ local function checkFuel(fuelNeeded)
     end
 end
 
+local function gatherFuel(fuelNeeded)
+    local fuelGathered = 0
+    local stackSize = 64 -- Adjust if using a different fuel type with a different stack size
+
+    while fuelGathered < fuelNeeded do
+        local amountToSuck = math.min(stackSize, fuelNeeded - fuelGathered)
+        local success = turtle.suckDown(amountToSuck)
+        if not success then
+            print("Failed to gather sufficient fuel.")
+            return false
+        end
+        fuelGathered = fuelGathered + amountToSuck
+        os.sleep(1) -- Sleep for a bit to avoid potential issues with rapid successive calls
+    end
+    return true
+end
 
 local function getOrientation()
     local loc1 = vector.new(gps.locate(2, false))
@@ -140,13 +139,13 @@ local function setHeadingX(xDiff, heading)
     return destinationHeading
 end
 
-local function digAndMove(n)
+local function digAndMove(n, fuelNeeded)
     for x = 1, n do
         while turtle.detect() do
             turtle.dig()
         end
         turtle.forward()
-        if not checkFuel() then
+        if not checkFuel(fuelNeeded) then
             print("Out of fuel, stopping operation.")
             return false
         end
@@ -154,14 +153,14 @@ local function digAndMove(n)
     return true
 end
 
-local function digAndMoveDown(n)
+local function digAndMoveDown(n, fuelNeeded)
     for y = 1, n do
         print(y)
         while turtle.detectDown() do
             turtle.digDown()
         end
         turtle.down()
-        if not checkFuel() then
+        if not checkFuel(fuelNeeded) then
             print("Out of fuel, stopping operation.")
             return false
         end
@@ -169,13 +168,13 @@ local function digAndMoveDown(n)
     return true
 end
 
-local function digAndMoveUp(n)
+local function digAndMoveUp(n, fuelNeeded)
     for y = 1, n do
         while turtle.detectUp() do
             turtle.digUp()
         end
         turtle.up()
-        if not checkFuel() then
+        if not checkFuel(fuelNeeded) then
             print("Out of fuel, stopping operation.")
             return false
         end
@@ -183,24 +182,24 @@ local function digAndMoveUp(n)
     return true
 end
 
-local function moveTo(coords, heading)
+local function moveTo(coords, heading, fuelNeeded)
     local currX, currY, currZ = gps.locate()
     local xDiff, yDiff, zDiff = coords.x - currX, coords.y - currY, coords.z - currZ
     print(string.format("Distances from start: %d %d %d", xDiff, yDiff, zDiff))
 
     -- Move to X start
     heading = setHeadingX(xDiff, heading)
-    if not digAndMove(math.abs(xDiff)) then return nil end
+    if not digAndMove(math.abs(xDiff), fuelNeeded) then return nil end
 
     -- Move to Z start
     heading = setHeadingZ(zDiff, heading)
-    if not digAndMove(math.abs(zDiff)) then return nil end
+    if not digAndMove(math.abs(zDiff), fuelNeeded) then return nil end
 
     -- Move to Y start
     if yDiff < 0 then    
-        if not digAndMoveDown(math.abs(yDiff)) then return nil end
+        if not digAndMoveDown(math.abs(yDiff), fuelNeeded) then return nil end
     elseif yDiff > 0 then
-        if not digAndMoveUp(math.abs(yDiff)) then return nil end
+        if not digAndMoveUp(math.abs(yDiff), fuelNeeded) then return nil end
     end
 
     return heading
@@ -219,7 +218,7 @@ if not gatherFuel(fuelNeeded) then
     return
 end
 
-if not checkFuel() then
+if not checkFuel(fuelNeeded) then
     print("Failed to refuel.")
     return
 end
@@ -236,7 +235,7 @@ if heading == nil then
     return
 end
 
-local finalHeading = moveTo(startCoords, heading)
+local finalHeading = moveTo(startCoords, heading, fuelNeeded)
 if finalHeading == nil then
     print("Failed to move to start coordinates.")
     return
@@ -249,12 +248,6 @@ finalHeading = NORTH_HEADING
 -- Now in Starting Position--
 
 --------------------------------START MINING CODE-----------------------------------------
-
-
-
-
-
-------------------------------------------------------------------------------------------
 
 DROPPED_ITEMS = {
     "minecraft:stone",
@@ -280,6 +273,7 @@ DROPPED_ITEMS = {
     "chisel:marble",
     "chisel:limestone",
 }
+
 local function dropItems()
     print("Purging Inventory...")
     for slot = 1, SLOT_COUNT do
@@ -381,11 +375,11 @@ local function turnAround(tier, heading)
     return FlipDirection(heading)
 end
 
-local function startQuarry(width, height, depth, heading)
+local function startQuarry(width, height, depth, heading, fuelNeeded)
     for tier = 1, height do
         for col = 1, width do
             for row = 1, depth - 1 do
-                if not checkFuel() then
+                if not checkFuel(fuelNeeded) then
                     print("Turtle is out of fuel, Powering Down...")
                     return
                 end
@@ -404,35 +398,35 @@ local function startQuarry(width, height, depth, heading)
 end
 
 local quarry = data[2]
-local finishedHeading = startQuarry(quarry.x, quarry.y, quarry.z, finalHeading)
+local finishedHeading = startQuarry(quarry.x, quarry.y, quarry.z, finalHeading, fuelNeeded)
 
 --------------------------------START RETURN TRIP CODE------------------------------------
 
-local function returnTo(coords, heading)
+local function returnTo(coords, heading, fuelNeeded)
     local currX, currY, currZ = gps.locate()
     local xDiff, yDiff, zDiff = coords.x - currX, coords.y - currY, coords.z - currZ
     print(string.format("Distances from end: %d %d %d", xDiff, yDiff, zDiff))
     
     -- Move to Y start
     if yDiff < 0 then    
-        digAndMoveDown(math.abs(yDiff))
+        digAndMoveDown(math.abs(yDiff), fuelNeeded)
     elseif yDiff > 0 then
-        digAndMoveUp(math.abs(yDiff))
+        digAndMoveUp(math.abs(yDiff), fuelNeeded)
     end
 
     -- Move to X start
     heading = setHeadingX(xDiff, heading)
-    digAndMove(math.abs(xDiff))
+    digAndMove(math.abs(xDiff), fuelNeeded)
 
     -- Move to Z start
     heading = setHeadingZ(zDiff, heading)
-    digAndMove(math.abs(zDiff))
+    digAndMove(math.abs(zDiff), fuelNeeded)
     
     return heading
 end
 
 local endCoords = data[3]
-returnTo(endCoords, finishedHeading)
+returnTo(endCoords, finishedHeading, fuelNeeded)
 
 local timeoutWait = 90
 for i = 1, timeoutWait do
