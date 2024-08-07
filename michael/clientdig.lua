@@ -31,23 +31,6 @@ local function parseParams(data)
     return coords
 end
 
-local function checkFuel()
-    turtle.select(1)
-    
-    if turtle.getFuelLevel() < 50 then
-        print("Attempting Refuel...")
-        for slot = 1, SLOT_COUNT do
-            turtle.select(slot)
-            if turtle.refuel() then
-                return true
-            end
-        end
-        return false
-    else
-        return true
-    end
-end
-
 local function gatherFuel(fuelNeeded)
     local fuelGathered = 0
     local stackSize = 64 -- Adjust if using a different fuel type with a different stack size
@@ -64,6 +47,28 @@ local function gatherFuel(fuelNeeded)
     end
     return true
 end
+
+local function checkFuel(fuelNeeded)
+    if turtle.getFuelLevel() < fuelNeeded then
+        print("Refueling...")
+
+        for slot = 1, SLOT_COUNT do
+            turtle.select(slot)
+            local itemDetail = turtle.getItemDetail(slot)
+            if itemDetail and turtle.refuel() then
+                if turtle.getFuelLevel() >= fuelNeeded then
+                    return true
+                end
+            end
+        end
+
+        print("Not enough fuel. Fuel level:", turtle.getFuelLevel(), "Needed:", fuelNeeded)
+        return false
+    else
+        return true
+    end
+end
+
 
 local function getOrientation()
     local loc1 = vector.new(gps.locate(2, false))
