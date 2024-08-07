@@ -8,7 +8,7 @@ local SERVER_PORT = 420
 local modem = peripheral.wrap("right")
 modem.open(CLIENT_PORT)
 
-function split (inputstr, sep)
+local function split (inputstr, sep)
     if sep == nil then
             sep = "%s"
     end
@@ -19,9 +19,9 @@ function split (inputstr, sep)
     return t
 end
 
-function parseParams(data)
-    coords = {}
-    params = split(data, " ")
+local function parseParams(data)
+    local coords = {}
+    local params = split(data, " ")
     
     coords[1] = vector.new(params[1], params[2], params[3])
     coords[2] = vector.new(params[4], params[5], params[6])
@@ -31,7 +31,7 @@ function parseParams(data)
 end
 
 
-function checkFuel()
+local function checkFuel()
     turtle.select(1)
     
     if(turtle.getFuelLevel() < 50) then
@@ -50,8 +50,8 @@ function checkFuel()
 end
 
 
-function getOrientation()
-    loc1 = vector.new(gps.locate(2, false))
+local function getOrientation()
+    local loc1 = vector.new(gps.locate(2, false))
     if not turtle.forward() then
         for j=1,6 do
             if not turtle.forward() then
@@ -61,15 +61,15 @@ function getOrientation()
             end
         end
     end
-    loc2 = vector.new(gps.locate(2, false))
-    heading = loc2 - loc1
+    local loc2 = vector.new(gps.locate(2, false))
+    local heading = loc2 - loc1
     turtle.down()
     turtle.down()
     return ((heading.x + math.abs(heading.x) * 2) + (heading.z + math.abs(heading.z) * 3))
     end
 
 
-function turnToFaceHeading(heading, destinationHeading)
+local function turnToFaceHeading(heading, destinationHeading)
     if(heading > destinationHeading) then
         for t = 1, math.abs(destinationHeading - heading), 1 do 
             turtle.turnLeft()
@@ -81,7 +81,7 @@ function turnToFaceHeading(heading, destinationHeading)
     end
 end
 
-function setHeadingZ(zDiff, heading)
+local function setHeadingZ(zDiff, heading)
     local destinationHeading = heading
     if(zDiff < 0) then
         destinationHeading = 2
@@ -93,7 +93,7 @@ function setHeadingZ(zDiff, heading)
     return destinationHeading
 end
 
-function setHeadingX(xDiff, heading)
+local function setHeadingX(xDiff, heading)
     local destinationHeading = heading
     if(xDiff < 0) then
         destinationHeading = 1
@@ -105,7 +105,7 @@ function setHeadingX(xDiff, heading)
     return destinationHeading
 end
 
-function digAndMove(n)
+local function digAndMove(n)
     for x = 1, n, 1 do
         while(turtle.detect()) do
             turtle.dig()
@@ -115,7 +115,7 @@ function digAndMove(n)
     end
 end
 
-function digAndMoveDown(n)
+local function digAndMoveDown(n)
     for y = 1, n, 1 do
         print(y)
         while(turtle.detectDown()) do
@@ -126,7 +126,7 @@ function digAndMoveDown(n)
     end
 end
 
-function digAndMoveUp(n)
+local function digAndMoveUp(n)
     for y = 1, n, 1 do
         while(turtle.detectUp()) do
             turtle.digUp()
@@ -137,7 +137,7 @@ function digAndMoveUp(n)
 end
 
 
-function moveTo(coords, heading)
+local function moveTo(coords, heading)
     local currX, currY, currZ = gps.locate()
     local xDiff, yDiff, zDiff = coords.x - currX, coords.y - currY, coords.z - currZ
     print(string.format("Distances from start: %d %d %d", xDiff, yDiff, zDiff))
@@ -168,7 +168,7 @@ function moveTo(coords, heading)
 end
 
 
-function calculateFuel(travels, digSize, fuelType)
+local function calculateFuel(travels, digSize, fuelType)
     local currX, currY, currZ = gps.locate()
     local xDiff, yDiff, zDiff = travels.x - currX, travels.y - currY, travels.z - currZ
 
@@ -195,8 +195,8 @@ end
 
 
 modem.transmit(SERVER_PORT, CLIENT_PORT, "CLIENT_DEPLOYED")
-event, side, senderChannel, replyChannel, msg, distance = os.pullEvent("modem_message")
-data = parseParams(msg)
+Event, Side, SenderChannel, ReplyChannel, Msg, Distance = os.pullEvent("modem_message")
+local data = parseParams(Msg)
 
 -- Pick up coal and refuel
 local fuelNeeded = calculateFuel(data[1], data[2], "minecraft:coal")
@@ -251,7 +251,7 @@ DROPPED_ITEMS = {
 	"chisel:marble",
 	"chisel:limestone",
 }
-function dropItems()
+local function dropItems()
     print("Purging Inventory...")
     for slot = 1, SLOT_COUNT, 1 do
         local item = turtle.getItemDetail(slot)
@@ -268,7 +268,7 @@ function dropItems()
 end
 
 
-function getEnderIndex()
+local function getEnderIndex()
     for slot = 1, SLOT_COUNT, 1 do
         local item = turtle.getItemDetail(slot)
         if(item ~= nil) then
@@ -280,9 +280,9 @@ function getEnderIndex()
     return nil
 end
 
-function manageInventory()
+local function manageInventory()
     dropItems()
-    index = getEnderIndex()
+    local index = getEnderIndex()
     if(index ~= nil) then
         turtle.select(index)
         turtle.digUp()      
@@ -304,18 +304,18 @@ function manageInventory()
 end
 
 
-function detectAndDig()
+local function detectAndDig()
     while(turtle.detect()) do
         turtle.dig()
     end
 end
 
-function forward()
+local function forward()
     detectAndDig()
     turtle.forward()
 end
 
-function leftTurn()
+local function leftTurn()
     turtle.turnLeft()
     detectAndDig()
     turtle.forward()
@@ -323,7 +323,7 @@ function leftTurn()
 end
 
 
-function rightTurn()
+local function rightTurn()
     turtle.turnRight()
     detectAndDig()
     turtle.forward()
@@ -331,20 +331,20 @@ function rightTurn()
 end
 
 
-function dropTier(heading)
+local function dropTier(heading)
     turtle.turnRight()
     turtle.turnRight()
     turtle.digDown()
     turtle.down()
-    return flipDirection(heading)
+    return FlipDirection(heading)
 end
 
 
-function flipDirection(heading)
+function FlipDirection(heading)
     return ((heading + 1) % 4) + 1
 end
 
-function turnAround(tier, heading)
+local function turnAround(tier, heading)
     if(tier % 2 == 1) then
         if(heading == 2 or heading == 3) then
             rightTurn()
@@ -359,12 +359,12 @@ function turnAround(tier, heading)
         end
     end
     
-    return flipDirection(heading)
+    return FlipDirection(heading)
 end
 
 
 
-function startQuary(width, height, depth, heading)
+local function startQuary(width, height, depth, heading)
 
     for tier = 1, height, 1 do
         for col = 1, width, 1 do
@@ -390,7 +390,7 @@ end
 
 
 local quary = data[2]
-finishedHeading = startQuary(quary.x, quary.y, quary.z, finalHeading)
+local finishedHeading = startQuary(quary.x, quary.y, quary.z, finalHeading)
 
 
 
@@ -403,7 +403,7 @@ finishedHeading = startQuary(quary.x, quary.y, quary.z, finalHeading)
 ------------------------------------------------------------------------------------------
 
 
-function returnTo(coords, heading)
+local function returnTo(coords, heading)
     local currX, currY, currZ = gps.locate()
     local xDiff, yDiff, zDiff = coords.x - currX, coords.y - currY, coords.z - currZ
     print(string.format("Distances from end: %d %d %d", xDiff, yDiff, zDiff))
@@ -428,7 +428,7 @@ function returnTo(coords, heading)
     return heading
 end
 
-endCoords = data[3]
+local endCoords = data[3]
 returnTo(endCoords ,finishedHeading)
 
 local timoutWait = 90
