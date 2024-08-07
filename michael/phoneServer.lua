@@ -174,10 +174,10 @@ while (true) do
     Event, Side, SenderChannel, ReplyChannel, Msg, Distance = os.pullEvent("modem_message")
 
     -- Parse out coordinates and options
-    local args = split(msg, " ")
+    local args = split(Msg, " ")
     local withStorage = args[#args]
     withStorage = withStorage == "1" and true or false
-    local data = parseParams(msg)
+    local data = parseParams(Msg)
     local options = {}
     options["withStorage"] = true
 
