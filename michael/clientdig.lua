@@ -1,3 +1,5 @@
+--CLIENT DIG--
+
 local SLOT_COUNT = 16
 
 local CLIENT_PORT = 0
@@ -6,7 +8,7 @@ local SERVER_PORT = 420
 local modem = peripheral.wrap("right")
 modem.open(CLIENT_PORT)
 
-local function split(inputstr, sep)
+local function split (inputstr, sep)
     if sep == nil then
         sep = "%s"
     end
@@ -20,10 +22,11 @@ end
 local function parseParams(data)
     local coords = {}
     local params = split(data, " ")
-
+    
     coords[1] = vector.new(params[1], params[2], params[3])
     coords[2] = vector.new(params[4], params[5], params[6])
     coords[3] = vector.new(params[7], params[8], params[9])
+    coords[4] = tonumber(params[10]) -- Fuel needed
 
     return coords
 end
@@ -45,13 +48,30 @@ local function checkFuel()
     end
 end
 
+local function gatherFuel(fuelNeeded)
+    local fuelGathered = 0
+    local stackSize = 64 -- Adjust if using a different fuel type with a different stack size
+
+    while fuelGathered < fuelNeeded do
+        local amountToSuck = math.min(stackSize, fuelNeeded - fuelGathered)
+        local success = turtle.suckDown(amountToSuck)
+        if not success then
+            print("Failed to gather sufficient fuel.")
+            return false
+        end
+        fuelGathered = fuelGathered + amountToSuck
+        os.sleep(1) -- Sleep for a bit to avoid potential issues with rapid successive calls
+    end
+    return true
+end
+
 local function getOrientation()
     local loc1 = vector.new(gps.locate(2, false))
     if not turtle.forward() then
         for j = 1, 6 do
             if not turtle.forward() then
                 turtle.dig()
-            else
+            else 
                 break
             end
         end
@@ -181,59 +201,23 @@ local function moveTo(coords, heading)
     return heading
 end
 
-local function calculateFuel(travels, digSize, fuelType)
-    local currX, currY, currZ = gps.locate()
-    local xDiff, yDiff, zDiff = math.abs(travels.x - currX), math.abs(travels.y - currY), math.abs(travels.z - currZ)
-
-    -- Calculate the travel distance to the quarry
-    local travelDistance = xDiff + yDiff + zDiff
-
-    -- Calculate the total number of movements
-    local horizontalMovesPerLayer = (digSize.x * digSize.z) * 2
-    local verticalMoves = digSize.y * 2
-    local totalMoves = travelDistance + (horizontalMovesPerLayer * digSize.y) + verticalMoves
-
-    -- Print debugging information
-    print(string.format("Travel distance: %d", travelDistance))
-    print(string.format("Horizontal moves per layer: %d", horizontalMovesPerLayer))
-    print(string.format("Vertical moves: %d", verticalMoves))
-    print(string.format("Total moves: %d", totalMoves))
-
-    -- Calculate fuel based on the fuel type
-    local totalFuel = totalMoves
-    if fuelType == "minecraft:coal" then
-        totalFuel = totalFuel / 80
-    elseif fuelType == "minecraft:coal_block" then
-        totalFuel = totalFuel / 800
-    elseif fuelType == "minecraft:charcoal" then
-        totalFuel = totalFuel / 80
-    else
-        print("INVALID FUEL SOURCE")
-        return nil
-    end
-
-    return math.ceil(totalFuel) + 5
-end
-
-
+-- Main script starts here
 modem.transmit(SERVER_PORT, CLIENT_PORT, "CLIENT_DEPLOYED")
 Event, Side, SenderChannel, ReplyChannel, Msg, Distance = os.pullEvent("modem_message")
 local data = parseParams(Msg)
 
 -- Pick up coal and refuel
-local fuelNeeded = calculateFuel(data[1], data[2], "minecraft:coal")
-if fuelNeeded == nil then
-    print("Failed to calculate fuel needed.")
+local fuelNeeded = data[4]  -- Use the provided fuel needed value
+print(string.format("Extracting %d fuel...", fuelNeeded))
+if not gatherFuel(fuelNeeded) then
+    print("Failed to gather sufficient fuel.")
     return
 end
 
-turtle.suckDown(fuelNeeded)
 if not checkFuel() then
     print("Failed to refuel.")
     return
 end
-
-print(string.format("Extracting %d fuel...", fuelNeeded))
 
 -- Grab Ender Chest
 turtle.turnRight()
@@ -295,10 +279,10 @@ local function dropItems()
     print("Purging Inventory...")
     for slot = 1, SLOT_COUNT do
         local item = turtle.getItemDetail(slot)
-        if item ~= nil then
+        if item then
             for filterIndex = 1, #DROPPED_ITEMS do
-                if item["name"] == DROPPED_ITEMS[filterIndex] then
-                    print("Dropping - " .. item["name"])
+                if item.name == DROPPED_ITEMS[filterIndex] then
+                    print("Dropping - " .. item.name)
                     turtle.select(slot)
                     turtle.dropDown()
                 end
@@ -310,10 +294,8 @@ end
 local function getEnderIndex()
     for slot = 1, SLOT_COUNT do
         local item = turtle.getItemDetail(slot)
-        if item ~= nil then
-            if item["name"] == "enderstorage:ender_chest" then
-                return slot
-            end
+        if item and item.name == "enderstorage:ender_chest" then
+            return slot
         end
     end
     return nil
@@ -322,7 +304,7 @@ end
 local function manageInventory()
     dropItems()
     local index = getEnderIndex()
-    if index ~= nil then
+    if index then
         turtle.select(index)
         turtle.digUp()      
         turtle.placeUp()  
@@ -330,11 +312,9 @@ local function manageInventory()
     -- Chest is now deployed
     for slot = 1, SLOT_COUNT do
         local item = turtle.getItemDetail(slot)
-        if item ~= nil then
-            if item["name"] ~= "minecraft:coal_block" and item["name"] ~= "minecraft:coal" and item["name"] ~= "minecraft:charcoal" then
-                turtle.select(slot)
-                turtle.dropUp()
-            end
+        if item and item.name ~= "minecraft:coal_block" and item.name ~= "minecraft:coal" and item.name ~= "minecraft:charcoal" then
+            turtle.select(slot)
+            turtle.dropUp()
         end
     end
     -- Items are now stored
