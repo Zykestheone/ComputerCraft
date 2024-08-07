@@ -183,14 +183,24 @@ end
 
 local function calculateFuel(travels, digSize, fuelType)
     local currX, currY, currZ = gps.locate()
-    local xDiff, yDiff, zDiff = travels.x - currX, travels.y - currY, travels.z - currZ
+    local xDiff, yDiff, zDiff = math.abs(travels.x - currX), math.abs(travels.y - currY), math.abs(travels.z - currZ)
 
-    local volume = digSize.x + digSize.y + digSize.z
-    local travelDistance = (math.abs(xDiff) + math.abs(yDiff) + math.abs(zDiff)) * 2
-    
-    local totalFuel = volume + travelDistance
-    print(string.format("total steps: %d", totalFuel))
+    -- Calculate the travel distance to the quarry
+    local travelDistance = xDiff + yDiff + zDiff
 
+    -- Calculate the total number of movements
+    local horizontalMovesPerLayer = (digSize.x * digSize.z) * 2
+    local verticalMoves = digSize.y * 2
+    local totalMoves = travelDistance + (horizontalMovesPerLayer * digSize.y) + verticalMoves
+
+    -- Print debugging information
+    print(string.format("Travel distance: %d", travelDistance))
+    print(string.format("Horizontal moves per layer: %d", horizontalMovesPerLayer))
+    print(string.format("Vertical moves: %d", verticalMoves))
+    print(string.format("Total moves: %d", totalMoves))
+
+    -- Calculate fuel based on the fuel type
+    local totalFuel = totalMoves
     if fuelType == "minecraft:coal" then
         totalFuel = totalFuel / 80
     elseif fuelType == "minecraft:coal_block" then
@@ -202,8 +212,9 @@ local function calculateFuel(travels, digSize, fuelType)
         return nil
     end
 
-    return math.floor(totalFuel) + 5
+    return math.ceil(totalFuel) + 5
 end
+
 
 modem.transmit(SERVER_PORT, CLIENT_PORT, "CLIENT_DEPLOYED")
 Event, Side, SenderChannel, ReplyChannel, Msg, Distance = os.pullEvent("modem_message")
