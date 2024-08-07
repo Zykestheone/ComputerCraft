@@ -34,7 +34,7 @@ local size = vector.new()
 local finish = vector.new()
 
 -- I STOLE --
-function split (inputstr, sep)
+local function split (inputstr, sep)
     if sep == nil then
             sep = "%s"
     end
@@ -45,9 +45,9 @@ function split (inputstr, sep)
     return t
 end
 
-function parseParams(data)
-    coords = {}
-    params = split(data, " ")
+local function parseParams(data)
+    local coords = {}
+    local params = split(data, " ")
     
     coords[1] = vector.new(params[1], params[2], params[3])
     coords[2] = vector.new(params[4], params[5], params[6])
@@ -55,7 +55,7 @@ function parseParams(data)
     return (coords)
 end
 
-function getItemIndex(itemName)
+local function getItemIndex(itemName)
     for slot = 1, SLOT_COUNT, 1 do
         local item = turtle.getItemDetail(slot)
         if(item ~= nil) then
@@ -66,7 +66,7 @@ function getItemIndex(itemName)
     end
 end
 
-function checkFuel()
+local function checkFuel()
     turtle.select(1)
     
     if(turtle.getFuelLevel() < 50) then
@@ -83,15 +83,15 @@ function checkFuel()
     end
 end
 
-function deployFuelChest()
+local function deployFuelChest()
     if (not checkFuel()) then
         print("SERVER NEEDS FUEL...")
-        exit(1)
+        os.exit(1)
     end
 end
 
 
-function deploy(startCoords, quarySize, endCoords, options)
+local function deploy(startCoords, quarySize, endCoords, options)
     --Place turtle from inventory
     turtle.select(getItemIndex("computercraft:turtle_advanced"))
     while(turtle.detect()) do
@@ -105,8 +105,8 @@ function deploy(startCoords, quarySize, endCoords, options)
     
     
     --Wait for client to send ping
-    event, side, senderChannel, replyChannel, msg, distance = os.pullEvent("modem_message")
-    if(msg ~= "CLIENT_DEPLOYED") then
+    Event, Side, SenderChannel, ReplyChannel, Msg, Distance = os.pullEvent("modem_message")
+    if(Msg ~= "CLIENT_DEPLOYED") then
         print("No client deploy message, exitting...")
         os.exit()
     end
@@ -116,7 +116,7 @@ function deploy(startCoords, quarySize, endCoords, options)
         --Set up ender chest
         if (not checkFuel()) then
             print("SERVER NEEDS FUEL...")
-            exit(1)
+            os.exit(1)
         end
     end
     
@@ -137,7 +137,7 @@ end
 
 
 -- Return array of arbitrary size for each bot placement
-function getPositioningTable(x, z, segmaentationSize)
+local function getPositioningTable(x, z, segmaentationSize)
     local xRemainder = x % segmaentationSize
     local zRemainder = z % segmaentationSize
 
@@ -171,14 +171,14 @@ end
 while (true) do
     -- Wait for phone
     print("Waiting for target signal...")
-    event, side, senderChannel, replyChannel, msg, distance = os.pullEvent("modem_message")
+    Event, Side, SenderChannel, ReplyChannel, Msg, Distance = os.pullEvent("modem_message")
 
     -- Parse out coordinates and options
     local args = split(msg, " ")
     local withStorage = args[#args]
     withStorage = withStorage == "1" and true or false
-    data = parseParams(msg)
-    options = {}
+    local data = parseParams(msg)
+    local options = {}
     options["withStorage"] = true
 
     target = data[1]
@@ -188,30 +188,30 @@ while (true) do
     finish.y = finish.y + 1
     print(string.format( "RECEIVED QUARY REQUEST AT: %d %d %d", target.x, target.y, target.z))
 
-    tab, xDf, zDf = table.unpack(getPositioningTable(size.x, size.z, segmentation))
+    Tab, XDf, ZDf = table.unpack(getPositioningTable(size.x, size.z, segmentation))
 
-    print(string.format("Deploying %d bots...", #tab))
-    for i = 1, #tab, 1 do
-        xOffset, zOffset, width, height = table.unpack(tab[i])
-        local offsetTarget = vector.new(target.x + xOffset, target.y, target.z + zOffset)
-        local sclaedSize = vector.new(width, size.y, height)
+    print(string.format("Deploying %d bots...", #Tab))
+    for i = 1, #Tab, 1 do
+        XOffset, ZOffset, Width, Height = table.unpack(Tab[i])
+        local offsetTarget = vector.new(target.x + XOffset, target.y, target.z + ZOffset)
+        local sclaedSize = vector.new(Width, size.y, Height)
 
         deploy(offsetTarget, sclaedSize, finish, options)
         os.sleep(1)
-        print(string.format( "Deploying to;  %d %d %d    %d %d",  target.x + xOffset, target.y, target.z + zOffset, sclaedSize.x, sclaedSize.z))
+        print(string.format( "Deploying to;  %d %d %d    %d %d",  target.x + XOffset, target.y, target.z + ZOffset, sclaedSize.x, sclaedSize.z))
     end
 
     -- All bots deployed, wait for last bot finished signal
-    event, side, senderChannel, replyChannel, msg, distance = os.pullEvent("modem_message")
+    Event, Side, SenderChannel, ReplyChannel, Msg, Distance = os.pullEvent("modem_message")
     turtle.digUp()
 	turtle.turnRight()
 	turtle.forward(1)
 	turtle.turnLeft()
 	turtle.select(getItemIndex("enderstorage:ender_chest"))
-	endercount = (turtle.getItemCount() - 2)
-	if (endercount ~= 0) then
-		print(string.format("Depositing %d Ender Chests.", endercount))
-		turtle.drop(endercount)
+	Endercount = (turtle.getItemCount() - 2)
+	if (Endercount ~= 0) then
+		print(string.format("Depositing %d Ender Chests.", Endercount))
+		turtle.drop(Endercount)
 	end
 	
 	turtle.turnLeft()
