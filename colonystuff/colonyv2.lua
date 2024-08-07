@@ -1,10 +1,13 @@
+-- Pocket Computer with colony intergrator installed, Uses back on pocket
 local colony = peripheral.wrap("back")
 
+-- Clears Terminal and sets Cursor to start
 local function TermClear()
     term.clear()
     term.setCursorPos(1, 1)
 end
 
+-- Gets Requests and prints them out 1 by 1 for each Citizen
 local function Requests()
     local requests = colony.getRequests()
 
@@ -21,6 +24,7 @@ local function Requests()
     end
 end
 
+--[[Unused Function to get Citizens Saturation and print if they need food
 local function Citizens()
     local citizens = colony.getCitizens()
 
@@ -39,7 +43,9 @@ local function Citizens()
         return
     end
 end
+]]--
 
+--[[Unused Function - Was going to be about research, I gave up
 local function Research()
     local research = colony.getResearch()
 
@@ -49,7 +55,9 @@ local function Research()
         end
     end
 end
+]]--
 
+-- Main Function, Prints Generic Info about Colony
 local function UpdateDisplay()
     TermClear()
     print(colony.getColonyName() .. " Stats")
@@ -60,11 +68,14 @@ local function UpdateDisplay()
     print("Overall happiness: " .. math.floor(colony.getHappiness()))
     print("Amount of graves: " .. colony.amountOfGraves())
     print("")
+-- Runs the Request Function
     Requests()
 end
 
+-- Initiates Display
 UpdateDisplay()
 
+-- Loops every 20 seconds or if a key is pressed.
 while true do
         local timerId = os.startTimer(20)
         local eventData = {os.pullEvent()}
