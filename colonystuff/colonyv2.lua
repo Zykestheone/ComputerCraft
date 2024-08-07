@@ -24,39 +24,6 @@ local function Requests()
     end
 end
 
---[[Unused Function to get Citizens Saturation and print if they need food
-local function Citizens()
-    local citizens = colony.getCitizens()
-
-    if citizens and #citizens > 0 then
-        for i, citizen in ipairs(citizens) do
-            local citizenName = citizen.name
-            local citizenSaturation = citizen.saturation
-            local citizenBetterFood = citizen.betterFood
-            if citizenSaturation <= 6 and citizenBetterFood == true then
-                print(citizenName .. " needs better food")
-            elseif citizenSaturation <= 6 then
-                    print(citizenName .. " needs food")
-            end
-        end
-    else
-        return
-    end
-end
-]]--
-
---[[Unused Function - Was going to be about research, I gave up
-local function Research()
-    local research = colony.getResearch()
-
-    if research and #research > 0 then
-        for i, x in ipairs(research) do
-        
-        end
-    end
-end
-]]--
-
 -- Main Function, Prints Generic Info about Colony
 local function UpdateDisplay()
     TermClear()
