@@ -16,13 +16,13 @@ if (#arg == 1) then
         segmentation = temp_segmentation
     else
         print("Invalid Argument, must be a number")
-        shell.exit()
+        do return end
     end
 elseif (#arg == 0) then
     print(string.format("No segmentation size selected, defaulting to %d", segmentation))
 else
     print('Too many args given...')
-    shell.exit()
+    do return end
 end
 
 

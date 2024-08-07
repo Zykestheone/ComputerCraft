@@ -12,7 +12,7 @@ if (#arg == 3) then
     size.z = tonumber(arg[3])
 else
     print("NO SIZE GIVEN")
-    os.exit(1)
+    do return end
 end
 
 local target = vector.new(gps.locate())

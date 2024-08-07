@@ -186,7 +186,7 @@ local function calculateFuel(travels, digSize, fuelType)
         totalFuel = totalFuel / 80
     else
         print("INVALID FUEL SOURCE")
-        os.exit(1)
+        do return end
     end
 
     return math.floor(totalFuel) + 5
