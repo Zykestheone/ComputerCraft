@@ -6,5 +6,5 @@ Have Chest Behind turtle
 
 ]]--
 
-turtle.forceForward()
-turtle.left()
+turtle.forward()
+turtle.suckDirection()
