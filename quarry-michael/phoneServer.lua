@@ -7,7 +7,13 @@ local SLOT_COUNT = 16
 
 local segmentation = 5
 if (#arg == 1) then
-    segmentation = tonumber(arg[1])
+    local temp_segmentation = tonumber(arg[1])
+    if temp_segmentation then
+        segmentation = temp_segmentation
+    else
+        print("Invalid Argument, must be a number")
+        do return end
+    end
 elseif (#arg == 0) then
     print(string.format("No segmentation size selected, defaulting to %d", segmentation))
 else
@@ -176,7 +182,7 @@ while (true) do
     withStorage = withStorage == "1" and true or false
     data = parseParams(msg)
     options = {}
-    options["withStorage"] = True
+    options["withStorage"] = true
 
     target = data[1]
     size = data[2]
