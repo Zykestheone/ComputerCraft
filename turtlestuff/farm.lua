@@ -6,5 +6,5 @@ Have Chest Behind turtle
 
 ]]--
 
-turtle.forward()
-turtle.suckDirection()
+local x, y, z = turtle.location()
+print("X: ", x, " Y: ", y, " Z: ", z)
