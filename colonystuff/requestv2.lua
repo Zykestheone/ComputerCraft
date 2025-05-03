@@ -4,8 +4,14 @@ if colony then
     for i, workOrder in ipairs(workOrders) do
         local workOrderID = workOrder.id
         local workOrderType = workOrder.workOrderType
+        if workOrder.isClaimed then
+            print(workOrder.buildingName)
+            print(workOrderID)
+            print(workOrderType)
 
-        print(workOrderID)
-        print(workOrderType)
+            local workOrderResources = colony.getWorkOrderResources(workOrderID)
+            for i, workOrderResource in ipairs(workOrderResources) do
+                print(workOrderResource.displayName.. workOrderResource.status.."/"..workOrderResource.needed)            end
+        end
     end
 end
