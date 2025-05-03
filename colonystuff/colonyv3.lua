@@ -10,7 +10,7 @@ local function stats ()
             underAttack = "Yes"
         end
         print("Is under attack? ".. underAttack)
-        print("Overall Happiness: ".. colony.getHappiness())
+        print("Overall Happiness: ".. math.floor(colony.getHappiness()))
         print("Amount of Graves: ".. colony.amountOfGraves())
 
         for i, citizen in ipairs(citizens) do
