@@ -17,7 +17,7 @@ local function stats ()
             local work = citizen.work
             local jobType = work and work.type or ""
             if jobType ~= "guardtower" and jobType ~= "barrackstower" then
-                if not citizen.isAlseep then
+                if not citizen.isAsleep then
                     awakeCount = awakeCount + 1
                 end
             end
