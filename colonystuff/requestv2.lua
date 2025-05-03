@@ -1,4 +1,4 @@
-local colony = peripheral.wrap("right")
+local colony = peripheral.wrap("left")
 if colony then
     local workOrders = colony.getWorkOrders()
     for i, workOrder in ipairs(workOrders) do
