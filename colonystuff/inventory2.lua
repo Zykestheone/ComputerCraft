@@ -9,7 +9,7 @@ local wantedTags = {
 }
 local unwantedTags = {
     ["minecraft:item/c:cobblestones"] = true,
-    ["minecraft:item/c:dirt"] = true,
+    ["minecraft:item/minecraft:dirt"] = true,
     ["minecraft:item/c:gravels"] = true
 }
 local unwantedItems = {
