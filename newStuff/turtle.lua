@@ -88,10 +88,15 @@ function down()
 end
 
 function sendBlockMap(targetID)
-    local data = textutils.serialize(blockMap)
-    rednet.send(targetID, data, "blockmap")
-    print("Block map sent to ID:", targetID)
+    local data = {
+        position = { x = position.x, y = position.y, z = position.z },
+        blocks = blockMap
+    }
+    local serialized = textutils.serialize(data)
+    rednet.send(targetID, serialized, "blockmap")
+    print("Sent map and position to", targetID)
 end
+
 
 
 peripheral.find("modem", rednet.open)
