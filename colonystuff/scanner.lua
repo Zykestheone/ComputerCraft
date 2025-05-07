@@ -21,7 +21,7 @@ print("Scanner position set to:", scannerPos.x, scannerPos.y, scannerPos.z)
 
 local wanted = {"ore"}
 
-local function isWanted()
+local function isWanted(name)
     for _, word in ipairs(wanted) do
         if string.find(name, word) then
             return true
